@@ -1,9 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import InputPassword from '../components/InputPassword'
+import InputPassword from '../components/inputPassword'
 
 const Login = () => {
+    const [data, setData] = useState({
+        email: '',
+        password: '',
+    })
+
+    // HANDLE INPUT CHANGE
+    const handleInputChange = (e) => {
+        const { name, value } = e.target
+
+        setData({
+            ...data,
+            [name]: value,
+        })
+    }
     return (
         <>
             <Navbar />
@@ -22,7 +36,7 @@ const Login = () => {
                             </label>
                             <input
                                 type="text"
-                                placeholder="Email"
+                                placeholder="Enter your Email"
                                 className="input-box border p-1 placeholder:text-sm focus:outline focus:outline-blue-300"
                             />
                         </div>
@@ -34,12 +48,17 @@ const Login = () => {
                             >
                                 Password
                             </label>
-                            <InputPassword />
+                            <InputPassword
+                                placeholder={'Enter your password'}
+                                value={data.password}
+                                onChange={handleInputChange}
+                                name="password"
+                            />{' '}
                         </div>
 
                         <button
                             type="submit"
-                            className="btn-primary bg-blue-700 my-2.5 w-full text-white py-1 font-semibold cursor-pointer text-md "
+                            className="btn-primary bg-blue-700 my-2.5 h-14k w-full text-white py-1 font-semibold cursor-pointer text-md "
                         >
                             Login
                         </button>

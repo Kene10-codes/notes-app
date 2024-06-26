@@ -1,8 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import { Link } from 'react-router-dom'
+import InputPassword from '../components/inputPassword'
 
 const Register = () => {
+    const [data, setData] = useState({
+        email: '',
+        password: '',
+    })
+
+    // HANDLE INPUT CHANGE
+    const handleInputChange = (e) => {
+        const { name, value } = e.target
+        setData({
+            ...data,
+            [name]: value,
+        })
+    }
     return (
         <>
             <Navbar />
@@ -21,7 +35,10 @@ const Register = () => {
                             </label>
                             <input
                                 type="text"
-                                placeholder="Email"
+                                placeholder="Enter your Email"
+                                name="email"
+                                value={data.email}
+                                onChange={handleInputChange}
                                 className="input-box border p-1 placeholder:text-sm focus:outline focus:outline-blue-300"
                             />
                         </div>
@@ -33,10 +50,11 @@ const Register = () => {
                             >
                                 Password
                             </label>
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                className="input-box border p-1 placeholdpassword-sm focus:outline focus:outline-blue-300"
+                            <InputPassword
+                                placeholder={'Enter your password'}
+                                value={data.password}
+                                onChange={handleInputChange}
+                                name="password"
                             />
                         </div>
 
