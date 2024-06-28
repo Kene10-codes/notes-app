@@ -16,20 +16,20 @@ const InputPassword = ({ value, onChange, placeholder, name }) => {
                 name={name}
                 onChange={onChange}
                 placeholder={placeholder || 'Password'}
-                className="border p-1 placeholder:text-sm focus:outline focus:outline-blue-300 w-full"
+                className="border p-1 placeholder:text-sm h-10 focus:outline focus:outline-blue-300 w-full"
             />
 
             <div className="absolute left-72 bottom-1">
                 {isShowPassword ? (
                     <FaRegEye
                         size={18}
-                        className="text-current cursor-pointer"
+                        className="text-slate-500 cursor-pointer"
                         onClick={() => toggleShowPassword()}
                     />
                 ) : (
                     <FaRegEyeSlash
                         size={18}
-                        className="text-current cursor-pointer"
+                        className="text-slate-500 cursor-pointer"
                         onClick={() => toggleShowPassword()}
                     />
                 )}
