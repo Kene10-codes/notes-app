@@ -35,4 +35,5 @@ userSchema.method.generateToken = () => {
 // INSTANTIATE MODEL
 const User = mongoose.model('User', userSchema)
 
+// EXPORT USER
 module.exports = User

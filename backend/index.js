@@ -6,18 +6,17 @@ const PORT = process.env.PORT || 3200
 const DB_CONNECT = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@nodetut.n6pqp.mongodb.net/Notes?retryWrites=true&w=majority`
 
 // CONNECT APP
-const startServer = () => {
+const startServer = async () => {
     try {
-        mongoose
-            .connect(DB_CONNECT)
-            .then(() => {
-                app.listen(PORT, () =>
-                    console.log(`DB is connected on port ${PORT}`)
-                )
-            })
-            .then((error) => console.log(error))
+        const DB_CONNECTED = await mongoose.connect(DB_CONNECT)
+        if (!DB_CONNECTED) {
+            throw new Error('DB connection with the URL was not successful')
+        }
+        app.listen(PORT, () => {
+            console.log(`DB is connected on port ${PORT}`)
+        })
     } catch (e) {
-        console.log(e)
+        throw new Error('DB connection was not successful')
     }
 }
 
