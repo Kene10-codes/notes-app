@@ -1,11 +1,10 @@
 const bcryptjs = require('bcryptjs')
-const { userValidator } = require('../validators/userValidator')
-const User = require('../models/userSchema')
+const { userValidator, loginValidator } = require('../validators/userValidator')
+const User = require('../models/userModel')
 
-// REGSITER USER
+// REGISTER USER
 const registerUser = async (req, res) => {
     try {
-        console.log(req.body)
         // CHECK ERROR
         const { error } = userValidator.validate(req.body)
         if (error)
@@ -20,7 +19,7 @@ const registerUser = async (req, res) => {
                 .status(400)
                 .json({ success: false, message: 'User already exists' })
 
-        const user = new User({
+        let user = new User({
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
@@ -41,4 +40,35 @@ const registerUser = async (req, res) => {
     }
 }
 
-module.exports = { registerUser }
+// LOGIN USER
+const loginUser = async (req, res) => {
+    const { error } = loginValidator.validate(req.body)
+    if (error)
+        return res
+            .status(400)
+            .json({ success: false, message: error.details[0].message })
+
+    const userInfo = await User.findOne({ email: req.body.email })
+    if (!userInfo)
+        return res
+            .status(401)
+            .json({ success: false, message: 'Incorrect email/password' })
+
+    // COMPARE PASSWORD
+    const matchPassword = await bcryptjs.compare(
+        req.body.password,
+        userInfo.password
+    )
+    if (!matchPassword)
+        return res
+            .status(401)
+            .json({ success: false, message: 'Incorrect email/password' })
+
+    // GENERATE TOKEN
+    const token = await User.generateToken()
+    res.header('note-token', token)
+    res.status(200).json({ success: true, message: 'User logged In' })
+}
+
+// EXPORT CONTROLLERS
+module.exports = { registerUser, loginUser }

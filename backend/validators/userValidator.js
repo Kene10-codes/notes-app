@@ -7,4 +7,9 @@ const userValidator = Joi.object({
     password: Joi.string().min(6).required(),
 })
 
-module.exports = { userValidator }
+const loginValidator = Joi.object({
+    email: Joi.string().max(255).email().required(),
+    password: Joi.string().min(6).required(),
+})
+
+module.exports = { userValidator, loginValidator }

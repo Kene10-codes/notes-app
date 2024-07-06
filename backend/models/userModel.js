@@ -26,7 +26,7 @@ const userSchema = new Schema(
 
 // VERIFY TOKEN FUNC
 
-userSchema.method.generateToken = () => {
+userSchema.methods.generateToken = () => {
     return jwt.sign({ _id: this._id }, process.env.JWT_PRIVATE_KEY, {
         expiresIn: '1d',
     })
