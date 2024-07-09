@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const noteSchema = new Schema(
     {
-        userId: { tyep: String, required: true },
+        userId: { type: String, required: true },
         title: {
             type: String,
             trim: true,
@@ -17,6 +17,7 @@ const noteSchema = new Schema(
             type: [String],
             default: [],
         },
+        isPinned: { type: Boolean, default: false },
     },
     { timestamp: true }
 )
