@@ -36,6 +36,7 @@ const registerUser = async (req, res) => {
         const token = user.generateToken()
 
         res.header('note-token', token)
+        res.cookie('user-id', user._id)
         res.status(201).json({
             error: false,
             success: true,
@@ -82,6 +83,7 @@ const loginUser = async (req, res) => {
         const token = user.generateToken()
 
         res.header('note-token', token)
+        res.cookie('user-id', user._id)
         res.status(200).json({
             error: false,
             success: true,

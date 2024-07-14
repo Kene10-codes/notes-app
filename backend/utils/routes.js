@@ -1,6 +1,7 @@
 const cors = require('cors')
 const helmet = require('helmet')
 const express = require('express')
+const cookie = require('cookie-parser')
 
 const userRoutes = require('../routes/userRoutes')
 const noteRoutes = require('../routes/noteRoutes')
@@ -20,6 +21,7 @@ module.exports = function (app) {
         ],
     }
     app.use(helmet())
+    app.use(cookie())
     app.use(express.json({ limit: '10MB' }))
     app.use(cors(corsOptions))
     app.use('/api/user', userRoutes)
