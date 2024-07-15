@@ -6,10 +6,12 @@ import { validateEmail } from '../utils/helpers'
 
 const Register = () => {
     const [data, setData] = useState({
+        name: '',
         email: '',
         password: '',
     })
     const [error, setError] = useState({
+        nameError: null,
         emailError: null,
         password: null,
     })
@@ -24,11 +26,20 @@ const Register = () => {
     }
 
     // HANDLE FORM REGISTRATION
-    const handleRegistration = (e) => {
+    const handleRegistration = async (e) => {
         e.preventDefault()
 
+        if (!data.name) {
+            setError({
+                emailError: '',
+                passwordError: '',
+                nameError: 'Please enter your fullname',
+            })
+            return
+        }
         if (!validateEmail(data.email)) {
             setError({
+                nameError: '',
                 passwordError: '',
                 emailError: 'Please enter a valid email address',
             })
@@ -37,6 +48,7 @@ const Register = () => {
 
         if (!data.password) {
             setError({
+                nameError: '',
                 emailError: '',
                 passwordError: 'Please enter the password',
             })
@@ -45,9 +57,30 @@ const Register = () => {
 
         // CLEAR ERRORS
         setError({
+            nameError: '',
             emailError: '',
             passwordError: '',
         })
+
+        // API CALL
+        try {
+            const response = await axiosInstance.post('/register', {
+                name: data.name,
+                email: data.email,
+                password: data.password,
+            })
+
+            if (response.data && response.data.message) {
+                setError(response.data.message)
+                return
+            }
+        } catch (e) {
+            if (e.response && e.response.data && e.response.data.message) {
+                setError(e.response.data.message)
+            } else {
+                setError('An unexpected error occured')
+            }
+        }
     }
     return (
         <>
@@ -58,6 +91,29 @@ const Register = () => {
                         <h4 className="text-2xl mb-3 text-center font-black text-blue-700">
                             Create An Account
                         </h4>
+                        <div className="flex  flex-col py-2">
+                            <label
+                                htmlFor="name"
+                                className="pb-1 text-slate-500"
+                            >
+                                Full Name
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Enter your fullname"
+                                name="name"
+                                value={data.name}
+                                onChange={handleInputChange}
+                                className="input-box border p-1 h-10  placeholder:text-sm focus:outline focus:outline-blue-300"
+                            />
+                        </div>
+
+                        {error.nameError && (
+                            <p className="text-red-500 text-sm font-semibold ">
+                                {error.nameError}
+                            </p>
+                        )}
+
                         <div className="flex  flex-col py-2">
                             <label
                                 htmlFor="email"
