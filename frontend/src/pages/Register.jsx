@@ -74,6 +74,11 @@ const Register = () => {
                 setError(response.data.message)
                 return
             }
+
+            if (response.data && response.data.message) {
+                localStorage.setItem('token', response.data.accessToken)
+                navigate('/dashboard')
+            }
         } catch (e) {
             if (e.response && e.response.data && e.response.data.message) {
                 setError(e.response.data.message)
@@ -105,7 +110,7 @@ const Register = () => {
                                 value={data.name}
                                 onChange={handleInputChange}
                                 className="input-box border p-1 h-10  placeholder:text-sm focus:outline focus:outline-blue-300"
-                            />
+                             />
                         </div>
 
                         {error.nameError && (

@@ -98,5 +98,34 @@ const loginUser = async (req, res) => {
     }
 }
 
+// GET USER
+const getUser = async (req, res) => {
+    try {
+        let user = await User.findOne({ _id: req.parms.id })
+        if (!user)
+            return res.status(400).json({
+                error: true,
+                success: false,
+                message: 'User not found',
+            })
+
+        res.status(200).json({
+            error: false,
+            success: true,
+            users: {
+                name: user.name,
+                email: user.email,
+            },
+            message: 'User found',
+        })
+    } catch (e) {
+        return res.status(500).json({
+            error: true,
+            success: false,
+            message: 'Internal server error',
+        })
+    }
+}
+
 // EXPORT CONTROLLERS
-module.exports = { registerUser, loginUser }
+module.exports = { registerUser, loginUser, getUser }

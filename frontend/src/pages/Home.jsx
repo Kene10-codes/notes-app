@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'
 import Card from '../components/Card'
 import { MdAdd } from 'react-icons/md'
 import EditNote from '../components/EditNote'
+import axiosInstance from '../utils/axios'
 import Modal from 'react-modal'
 
 const Home = () => {
@@ -11,6 +12,18 @@ const Home = () => {
         isShown: false,
         data: null,
     })
+
+    const [userInfo, setUserInfo] = useState(null)
+
+    // GEY USER
+    const getUserInfo = async () => {
+        try {
+            const response = await axiosInstance.get('/get-user')
+            if (response.data && response.data.user) {
+                setUserInfo(response.data.user)
+            }
+        } catch (error) {}
+    }
 
     return (
         <div>

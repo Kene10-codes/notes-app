@@ -205,4 +205,4 @@ const deleteNote = async (req, res) => {
     }
 }
 
-module.exports = { postNote, getNotes, getNote, editeNote, deleteNote }
+module.exports = { postNote, getNotes, getNote, deleteNote, editeNote }

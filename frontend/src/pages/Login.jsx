@@ -63,8 +63,12 @@ const Login = () => {
                 localStorage.setItem('token', response.data.accessToken)
                 navigate('/dashboard')
             }
-        } catch (e) {
-            if (e.response && e.response.data && e.response.data.message) {
+        } catch (error) {
+            if (
+                error.response &&
+                error.response.data &&
+                error.response.data.message
+            ) {
                 setError(e.response.data.message)
             } else {
                 setError('An unexpected error occured')
