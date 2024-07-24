@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const authenticateToken = async (req, res, next) => {
     const token = req.header('x-auth-token')
 
-    if (!token) return res.status(400).json({ error: 'No token provided!' })
+    if (!token) return res.status(401).json({ error: 'No token provided!' })
 
     try {
         // VERIFY TOKEN PROVIDED

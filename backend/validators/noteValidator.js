@@ -1,7 +1,6 @@
 const Joi = require('joi')
 
 const postNoteValidate = new Joi.object({
-    // userId: Joi.string().min(4).required(),
     tags: Joi.required(),
     title: Joi.string().min(4).required(),
     content: Joi.string().required(),

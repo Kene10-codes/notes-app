@@ -35,8 +35,8 @@ const registerUser = async (req, res) => {
         await user.save()
         const token = user.generateToken()
 
-        res.header('note-token', token)
-        res.cookie('user-id', user._id)
+        res.header('x-auth-token', token)
+        res.cookie('userId', user._id)
         res.status(201).json({
             error: false,
             success: true,
@@ -82,8 +82,8 @@ const loginUser = async (req, res) => {
         // GENERATE TOKEN
         const token = user.generateToken()
 
-        res.header('note-token', token)
-        res.cookie('user-id', user._id)
+        res.header('x-auth-token', token)
+        res.cookie('userId', user._id)
         res.status(200).json({
             error: false,
             success: true,

@@ -37,10 +37,10 @@ const postNote = async (req, res) => {
                 message: error.details[0].message,
             })
 
-        const userId = req.cookie('userId')
+        const user = req.user
 
-        if (!userId)
-            return res.status(400).json({
+        if (!user)
+            return res.status(401).json({
                 error: true,
                 success: false,
                 message: 'Invalid User ID',
@@ -48,7 +48,7 @@ const postNote = async (req, res) => {
 
         // SAVE NOTE
         const note = new Note({
-            userId,
+            userId: user._id,
             title: req.body.title,
             content: req.body.content,
             tags: req.body.tags || [],
