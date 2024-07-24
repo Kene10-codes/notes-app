@@ -78,7 +78,7 @@ const getNote = async (req, res) => {
             message: 'Note ID is invalid',
         })
 
-    const note = await Note.findById(noteId)
+    const note = await Note.findById(noteId).sort({ isPinned: -1 })
     if (!note)
         return res.status(400).json({
             error: true,
