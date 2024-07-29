@@ -37,9 +37,9 @@ const postNote = async (req, res) => {
                 message: error.details[0].message,
             })
 
-        const user = req.user
+        const { userId } = req.cookies
 
-        if (!user)
+        if (!userId)
             return res.status(401).json({
                 error: true,
                 success: false,
@@ -48,9 +48,10 @@ const postNote = async (req, res) => {
 
         // SAVE NOTE
         const note = new Note({
-            userId: user._id,
+            userId,
             title: req.body.title,
             content: req.body.content,
+            isPinned: req.body.isPinned,
             tags: req.body.tags || [],
         })
 
@@ -58,39 +59,48 @@ const postNote = async (req, res) => {
         res.status(200).json({
             error: false,
             success: true,
-            message: 'Note save successfully',
+            message: 'Note saved successfully',
         })
     } catch (e) {
         return res.status(500).json({
             error: true,
             success: false,
-            message: 'Internal server error',
+            message: e.message,
         })
     }
 }
 
 const getNote = async (req, res) => {
-    const { noteId } = req.params
-    if (!noteId)
-        return res.status(400).json({
+    try {
+        const { noteId } = req.params
+        if (!noteId)
+            return res.status(400).json({
+                error: true,
+                success: false,
+                message: 'Note ID is invalid',
+            })
+
+        const note = await Note.findById(noteId).sort({ isPinned: -1 })
+        if (!note)
+            return res.status(400).json({
+                error: true,
+                success: false,
+                message: 'Note not found',
+            })
+
+        res.status(200).json({
+            error: false,
+            success: true,
+            note,
+            message: 'Note fetched sucessfully',
+        })
+    } catch (e) {
+        return res.status(500).json({
             error: true,
             success: false,
-            message: 'Note ID is invalid',
+            message: e.message,
         })
-
-    const note = await Note.findById(noteId).sort({ isPinned: -1 })
-    if (!note)
-        return res.status(400).json({
-            error: true,
-            success: false,
-            message: 'Note not found',
-        })
-
-    res.status(200).json({
-        error: false,
-        success: true,
-        message: 'Note fetched sucessfully',
-    })
+    }
 }
 
 // EDIT NOTE
@@ -115,7 +125,7 @@ const editeNote = async (req, res) => {
             })
 
         // CHECK USER ID
-        const userId = req.cookies.noteId
+        const { userId } = req.cookies
         if (!userId)
             return res.status(400).json({
                 error: true,
@@ -161,7 +171,7 @@ const editeNote = async (req, res) => {
     } catch (e) {
         return res.status(500).json({
             error: true,
-            message: 'Internal server error',
+            message: e.message,
         })
     }
 }
@@ -200,7 +210,7 @@ const deleteNote = async (req, res) => {
     } catch (e) {
         return res.status(500).json({
             error: true,
-            message: 'Internal server error',
+            message: e.message,
         })
     }
 }
