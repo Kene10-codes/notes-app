@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import { Link } from 'react-router-dom'
-import InputPassword from '../components/InputPassword'
+import axiosInstance from '../utils/axios'
 import { validateEmail } from '../utils/helpers'
+import InputPassword from '../components/InputPassword'
 
 const Register = () => {
     const [data, setData] = useState({
@@ -55,33 +56,27 @@ const Register = () => {
             return
         }
 
-        // CLEAR ERRORS
-        setError({
-            nameError: '',
-            emailError: '',
-            passwordError: '',
-        })
-
         // API CALL
         try {
-            const response = await axiosInstance.post('/register', {
+            const response = await axiosInstance.post('/user/register', {
                 name: data.name,
                 email: data.email,
                 password: data.password,
             })
 
-            if (response.data && response.data.message) {
-                setError(response.data.message)
-                return
-            }
-
-            if (response.data && response.data.message) {
+            if (response.data & response.data.accessToken) {
                 localStorage.setItem('token', response.data.accessToken)
                 navigate('/dashboard')
+                // CLEAR ERRORS
+                setError({
+                    nameError: '',
+                    emailError: '',
+                    passwordError: '',
+                })
             }
-        } catch (e) {
-            if (e.response && e.response.data && e.response.data.message) {
-                setError(e.response.data.message)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data.message)
             } else {
                 setError('An unexpected error occured')
             }
@@ -110,7 +105,7 @@ const Register = () => {
                                 value={data.name}
                                 onChange={handleInputChange}
                                 className="input-box border p-1 h-10  placeholder:text-sm focus:outline focus:outline-blue-300"
-                             />
+                            />
                         </div>
 
                         {error.nameError && (

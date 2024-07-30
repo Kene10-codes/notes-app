@@ -46,30 +46,27 @@ const Login = () => {
             return
         }
 
-        // CLEAR ERRORS
-        setError({
-            emailError: '',
-            passwordError: '',
-        })
-
         // API CALL
         try {
-            const response = await axiosInstance.post('/login', {
+            const response = await axiosInstance.post('/user/login', {
                 email: data.email,
                 password: data.password,
             })
 
-            if (response.data && response.data.message) {
+            if (response.data & response.data.accessToken) {
                 localStorage.setItem('token', response.data.accessToken)
+                // NAVIGATE TO DASHBOARD
                 navigate('/dashboard')
+
+                // CLEAR ERRORS
+                setError({
+                    emailError: '',
+                    passwordError: '',
+                })
             }
         } catch (error) {
-            if (
-                error.response &&
-                error.response.data &&
-                error.response.data.message
-            ) {
-                setError(e.response.data.message)
+            if (error.response && error.response.data) {
+                setError(error.response.data.message)
             } else {
                 setError('An unexpected error occured')
             }
