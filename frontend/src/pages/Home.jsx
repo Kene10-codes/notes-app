@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Card from '../components/Card'
 import { MdAdd } from 'react-icons/md'
@@ -7,6 +8,8 @@ import axiosInstance from '../utils/axios'
 import Modal from 'react-modal'
 
 const Home = () => {
+    const navigate = useNavigate()
+    const [notes, setNotes] = useState({})
     const [openAddEditModal, setOpenAddEditModal] = useState({
         type: 'add',
         isShown: false,
@@ -18,17 +21,40 @@ const Home = () => {
     // GEY USER
     const getUserInfo = async () => {
         try {
-            const response = await axiosInstance.get('/get-user')
+            const response = await axiosInstance.get('/user/get-user')
             if (response.data && response.data.user) {
                 setUserInfo(response.data.user)
             }
-        } catch (error) {}
+        } catch (error) {
+            if (error.response.status === 401) {
+                localStorage.clear()
+            }
+        }
     }
+
+    // GET ALL NOTES
+    const getAllNotes = async () => {
+        try {
+            const response = await axiosInstance.get('/note/')
+            if (response.data) {
+                setNotes(response.data)
+            }
+        } catch (error) {
+            console.log('An unexpected error occured!')
+        }
+    }
+
+    // USE-EFFECT
+    useEffect(() => {
+        getAllNotes()
+        getUserInfo()
+        // CLEAN UP FUNCTION
+        return () => {}
+    }, [])
 
     return (
         <div>
-            <Navbar />
-
+            <Navbar userInfo={userInfo} />
             <div className="container mx-auto">
                 <Card
                     title="Understanding JavaScript"
@@ -68,6 +94,7 @@ const Home = () => {
                 <EditNote
                     type={openAddEditModal.type}
                     noteData={openAddEditModal.data}
+                    m
                     onClose={() =>
                         setOpenAddEditModal({
                             isShown: false,
