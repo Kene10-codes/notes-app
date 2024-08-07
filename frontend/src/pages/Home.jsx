@@ -10,13 +10,12 @@ import Modal from 'react-modal'
 const Home = () => {
     const navigate = useNavigate()
     const [notes, setNotes] = useState({})
+    const [userInfo, setUserInfo] = useState(null)
     const [openAddEditModal, setOpenAddEditModal] = useState({
         type: 'add',
         isShown: false,
         data: null,
     })
-
-    const [userInfo, setUserInfo] = useState(null)
 
     // GEY USER
     const getUserInfo = async () => {
@@ -52,6 +51,7 @@ const Home = () => {
         return () => {}
     }, [])
 
+    console.log(userInfo + '122')
     return (
         <div>
             <Navbar userInfo={userInfo} />

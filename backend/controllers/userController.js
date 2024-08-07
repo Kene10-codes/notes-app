@@ -34,12 +34,14 @@ const registerUser = async (req, res) => {
         // SAVE NEW USER
         await user.save()
         const token = user.generateToken()
-
+        const { email } = user
         res.header('x-auth-token', token)
         res.cookie('userId', user._id)
         res.status(201).json({
             error: false,
             success: true,
+            token,
+            email,
             message: 'User successfully registered',
         })
     } catch (e) {
@@ -101,7 +103,8 @@ const loginUser = async (req, res) => {
 // GET USER
 const getUser = async (req, res) => {
     try {
-        let user = await User.findOne({ _id: req.parms.id })
+        const email = localStorage.getItem('email')
+        let user = await User.findOne({ email: email })
         if (!user)
             return res.status(400).json({
                 error: true,
@@ -112,7 +115,7 @@ const getUser = async (req, res) => {
         res.status(200).json({
             error: false,
             success: true,
-            users: {
+            user: {
                 name: user.name,
                 email: user.email,
             },

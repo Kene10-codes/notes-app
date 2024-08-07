@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axiosInstance from '../utils/axios'
 import { validateEmail } from '../utils/helpers'
 import InputPassword from '../components/InputPassword'
 
 const Register = () => {
+    const navigate = useNavigate()
     const [data, setData] = useState({
         name: '',
         email: '',
@@ -64,9 +65,10 @@ const Register = () => {
                 password: data.password,
             })
 
-            if (response.data & response.data.accessToken) {
-                localStorage.setItem('token', response.data.accessToken)
-                navigate('/dashboard')
+            if (response.data && response.data.token) {
+                localStorage.setItem('token', response.data.token)
+                localStorage.setItem('email', response.data.email)
+                navigate('/')
                 // CLEAR ERRORS
                 setError({
                     nameError: '',
