@@ -35,14 +35,8 @@ const registerUser = async (req, res) => {
         await user.save()
         const token = user.generateToken()
         const { email } = user
-        console.log(user._id)
         res.header('x-auth-token', token)
-        res.cookie('userId', user._id, {
-            maxAge: 900000,
-            secure: false,
-            httpOnly: false,
-            sameSite: 'None',
-        })
+        res.cookie('userId', user._id)
         res.status(201).json({
             error: false,
             success: true,
