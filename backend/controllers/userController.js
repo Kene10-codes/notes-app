@@ -35,8 +35,14 @@ const registerUser = async (req, res) => {
         await user.save()
         const token = user.generateToken()
         const { email } = user
+        console.log(user._id)
         res.header('x-auth-token', token)
-        res.cookie('userId', user._id)
+        res.cookie('userId', user._id, {
+            maxAge: 900000,
+            secure: false,
+            httpOnly: false,
+            sameSite: 'None',
+        })
         res.status(201).json({
             error: false,
             success: true,
@@ -103,21 +109,23 @@ const loginUser = async (req, res) => {
 // GET USER
 const getUser = async (req, res) => {
     try {
-        const email = localStorage.getItem('email')
-        let user = await User.findOne({ email: email })
-        if (!user)
+        const user = req.user
+        console.log(user)
+        let userInfo = await User.findOne({ _id: user._id })
+        if (!userInfo)
             return res.status(400).json({
                 error: true,
                 success: false,
                 message: 'User not found',
             })
 
+        const { email, name } = userInfo
         res.status(200).json({
             error: false,
             success: true,
             user: {
-                name: user.name,
-                email: user.email,
+                email,
+                name,
             },
             message: 'User found',
         })

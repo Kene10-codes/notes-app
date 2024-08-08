@@ -8,6 +8,7 @@ const authenticateToken = async (req, res, next) => {
     try {
         // VERIFY TOKEN PROVIDED
         const decodedToken = jwt.verify(token, process.env.JWT_PRIVATE_KEY)
+        console.log(decodedToken)
         req.user = decodedToken
         next()
     } catch (e) {
